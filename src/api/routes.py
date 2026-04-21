@@ -71,3 +71,9 @@ def activar_cliente(ip: str, config: MikroTikConfig):
 def ver_conectados(host: str, user: str, password: str):
     mk = MikroTik(host, user, password)
     return mk.listar_conectados()
+from src.core.monitor import estado_red
+from typing import List
+
+@router.post("/monitor/ping")
+def monitorear_red(hosts: List[str]):
+    return estado_red(hosts)
