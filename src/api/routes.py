@@ -49,3 +49,25 @@ def eliminar_cliente(id: int, db: Session = Depends(get_db)):
     db.delete(cliente)
     db.commit()
     return {"mensaje": "Cliente eliminado"}
+from src.core.mikrotik import MikroTik
+from pydantic import BaseModel
+
+class MikroTikConfig(BaseModel):
+    host: str
+    user: str
+    password: str
+
+@router.post("/mikrotik/cortar/{ip}")
+def cortar_cliente(ip: str, config: MikroTikConfig):
+    mk = MikroTik(config.host, config.user, config.password)
+    return mk.cortar_cliente(ip)
+
+@router.post("/mikrotik/activar/{ip}")
+def activar_cliente(ip: str, config: MikroTikConfig):
+    mk = MikroTik(config.host, config.user, config.password)
+    return mk.activar_cliente(ip)
+
+@router.get("/mikrotik/conectados")
+def ver_conectados(host: str, user: str, password: str):
+    mk = MikroTik(host, user, password)
+    return mk.listar_conectados()
